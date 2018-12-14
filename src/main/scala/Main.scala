@@ -4,17 +4,24 @@ import cassandra.CassandraDriver
 import elastic.ElasticSink
 import kafka.{KafkaSink, KafkaSource}
 import mapGroupsWithState.MapGroupsWithState
+import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.Dataset
 import parquetHelper.ParquetService
+import radio.Song
 import spark.SparkHelper
 
 object Main {
 
   def main(args: Array[String]) {
+    System.setProperty("hadoop.home.dir", "C:\\ENV_DEV\\tools\\spark\\winutils\\")
     val spark = SparkHelper.getAndConfigureSparkSession()
 
     //Classic Batch
-    //ParquetService.batchWay()
-
+   /*
+   val songsDS: Dataset[Song] = ParquetService.batchWay()
+    val songsRDD: RDD[Song] = songsDS.rdd
+    songsRDD.saveAsTextFile("target/songs.txt")
+    */
     //Streaming way
     //Generate a "fake" stream from a parquet file
     val streamDS = ParquetService.streamingWay()
@@ -40,7 +47,7 @@ object Main {
     //CassandraDriver.saveForeach(kafkaInputDS) //Untype/unsafe method using CQL  --> just here for example
 
     //Another fun example managing an arbitrary state
-    MapGroupsWithState.write(kafkaInputDS)
+//    MapGroupsWithState.write(kafkaInputDS)
 
     //Wait for all streams to finish
     spark.streams.awaitAnyTermination()

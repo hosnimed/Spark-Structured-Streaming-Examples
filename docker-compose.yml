@@ -2,23 +2,27 @@ version: '2'
 services:
   zookeeper: # thanks to https://github.com/confluentinc/cp-docker-images/issues/265#issuecomment-314442790
     image: confluentinc/cp-zookeeper:latest
+    container_name: cp-zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 32181
       ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_HEAP_OPTS: "-Xmx512M -Xms256M"
     ports:
         - "32181:32181"
     extra_hosts:
       - "localhost: 127.0.0.1"
   kafka:
     image: confluentinc/cp-kafka:latest
+    container_name: cp-kafka
     depends_on:
       - zookeeper
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:32181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://192.168.99.100:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      KAFKA_HEAP_OPTS: "-Xmx512M -Xms256M"
     ports:
         - "9092:9092"
     extra_hosts:
@@ -26,11 +30,12 @@ services:
 
   cassandra:
     image: cassandra:3.11
+    container_name: cassandra
     ports:
       - "9042:9042"
       - "7199:7199"
     volumes:
-      - ./src/conf/cassandra/schema.cql:/schema.cql
+      - ./src/conf/cassandra/:/schema
     extra_hosts:
       - "localhost: 127.0.0.1"
 
@@ -38,15 +43,17 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.3.0
     container_name: elasticsearch
 #   environment: ['http.host=0.0.0.0', 'transport.host=127.0.0.1']
+    environment:
+      ES_JAVA_OPTS: "-Xmx512M -Xms512M"
     ports:
       - "9200:9200"
     extra_hosts:
       - "localhost: 127.0.0.1"
+#    command: sysctl -w vm.max_map_count=262144
 
   kibana:
     image: docker.elastic.co/kibana/kibana:6.3.0
     container_name: kibana
-
     ports:
       - "5601:5601"
     depends_on: ['elasticsearch']

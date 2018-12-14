@@ -12,6 +12,8 @@ libraryDependencies += "org.apache.spark" %% "spark-core" % sparkVersion
 libraryDependencies += "org.apache.spark" %% "spark-sql" % sparkVersion
 libraryDependencies += "org.apache.spark" % "spark-sql-kafka-0-10_2.11" % sparkVersion
 libraryDependencies += "com.datastax.spark" %% "spark-cassandra-connector" % "2.0.2"
+libraryDependencies += "com.typesafe" % "config" % "1.3.3"
+
 
 fork in run := true
 

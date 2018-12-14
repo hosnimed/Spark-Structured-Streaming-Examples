@@ -53,6 +53,7 @@ object ParquetService extends LazyLogger {
       .option("maxFilesPerTrigger", 1000)  // Treat a sequence of files as a stream by picking one file at a time
       .parquet(pathRadioStationSongs)
       .as[Song]
+//      .where($"artist" startsWith  "D")
       .where($"artist" === "Drake")
       .groupBy($"radio", $"artist",  $"title")
       .count()
@@ -66,6 +67,7 @@ object ParquetService extends LazyLogger {
       .option("maxFilesPerTrigger", 1000)  // Treat a sequence of files as a stream by picking one file at a time
       .parquet(pathRadioES)
       .as[Song]
+//      .where($"artist" startsWith  "D")
       .where($"artist" === "Drake")
       .withWatermark("timestamp", "10 minutes")
       .as[Song]

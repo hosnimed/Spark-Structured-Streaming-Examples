@@ -23,6 +23,7 @@ object KafkaSink extends LazyLogger {
       .option("kafka.bootstrap.servers", KafkaService.bootstrapServers)
       .queryName("Kafka - Count number of broadcasts for a title/artist by radio")
       .option("topic", "test")
+//      .option("subscribe", "test")
       .start()
   }
 

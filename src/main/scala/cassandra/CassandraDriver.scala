@@ -23,8 +23,8 @@ object CassandraDriver extends LazyLogger {
     val rdd = spark.sparkContext.cassandraTable(namespace, kafkaMetadata)
 
     if( !rdd.isEmpty ) {
-      log.warn(rdd.count)
-      log.warn(rdd.first)
+      log.warn(s"Cassandra : keyspace :$namespace -table: $kafkaMetadata -count: ${rdd.count}")
+      log.warn(s"Cassandra : row :${rdd.first}")
     } else {
       log.warn(s"$namespace, $kafkaMetadata is empty in cassandra")
     }

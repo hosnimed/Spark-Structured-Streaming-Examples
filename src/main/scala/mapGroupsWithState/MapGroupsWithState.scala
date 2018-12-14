@@ -28,16 +28,16 @@ object MapGroupsWithState extends LazyLogger {
                          oldState: GroupState[ArtistAggregationState]): ArtistAggregationState = {
 
     var state: ArtistAggregationState = if (oldState.exists)
-      oldState.get
+    oldState.get
     else
-      ArtistAggregationState(artist, 1L)
-
+    ArtistAggregationState(artist, 1L)
+    var stateCheck = Option(oldState.get).getOrElse(ArtistAggregationState(artist, 1L))
+    log.warn(s"Sate Check : $stateCheck")
     // for every rows, let's count by artist the number of broadcast, instead of counting by artist, title and radio
     for (input <- inputs) {
       state = updateArtistStateWithEvent(state, input)
       oldState.update(state)
     }
-
     state
   }
 

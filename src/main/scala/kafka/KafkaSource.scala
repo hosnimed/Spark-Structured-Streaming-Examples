@@ -41,7 +41,7 @@ object KafkaSource extends LazyLogger {
       spark
       .readStream
       .format("kafka")
-      .option("kafka.bootstrap.servers", "localhost:9092")
+      .option("kafka.bootstrap.servers", KafkaService.bootstrapServers)
       .option("subscribe", KafkaService.topicName)
       .option("enable.auto.commit", false) // Cannot be set to true in Spark Strucutured Streaming https://spark.apache.org/docs/latest/structured-streaming-kafka-integration.html#kafka-specific-configurations
       .option("group.id", "Structured-Streaming-Examples")
